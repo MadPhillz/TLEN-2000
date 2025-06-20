@@ -1,0 +1,38 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  background: black;
+  color: #0f0;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+#intro {
+  text-align: center;
+}
+h1 {
+  font-size: 3em;
+  margin-bottom: 0.5em;
+}
+#story {
+  max-width: 600px;
+  padding: 20px;
+  white-space: pre-wrap;
+}
+.choice-button {
+  background: #0f0;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  margin: 10px 5px;
+  cursor: pointer;
+  font-family: monospace;
+  font-size: 14px;
+}
+.choice-button:hover {
+  background: #0c0;
+}
