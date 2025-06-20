@@ -61,6 +61,25 @@
       padding: 20px;
       word-wrap: break-word;
     }
+    .choice-button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 14px;
+      background: #0f0;
+      color: black;
+      border: none;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      user-select: none;
+    }
+    .choice-button:hover {
+      background-color: #0c0;
+    }
     @media (max-width: 600px) {
       body {
         font-size: 10px;
@@ -69,7 +88,7 @@
       #game {
         padding: 10px;
       }
-      #intro button {
+      #intro button, .choice-button {
         font-size: 12px;
         padding: 10px 16px;
       }
@@ -83,18 +102,81 @@
     <button id="start-btn">НАЧАТЬ</button>
   </div>
 
-  <div id="game">
-    <p>Ты стоишь на автобусной остановке. Всё вокруг серо и тихо.</p>
-    <p>...</p>
+  <div id="game" style="display:none;">
+    <p id="story-text">Ты поднялся на этаж — дверцы подъезда скрипят так, будто кто-то давно тут уже не заходил...</p>
+    <div id="choices">
+      <button class="choice-button" data-choice="1">Пойти в коммуналку послушать телевизор поближе</button>
+      <button class="choice-button" data-choice="2">Спуститься обратно во двор и посмотреть на гаражи</button>
+      <button class="choice-button" data-choice="3">Заглянуть в лестничную клетку</button>
+      <button class="choice-button" data-choice="4">Осмотреть медвежонка и бутылку тщательнее</button>
+    </div>
   </div>
 
   <script>
     let audio = new Audio('postpunk.mp3');
     audio.loop = true;
 
+    const intro = document.getElementById('intro');
+    const game = document.getElementById('game');
+    const storyText = document.getElementById('story-text');
+    const choices = document.getElementById('choices');
+
     document.getElementById('start-btn').addEventListener('click', () => {
-      document.getElementById('intro').style.display = 'none';
+      intro.style.display = 'none';
+      game.style.display = 'block';
       audio.play().catch(e => console.log("Автозапуск отклонён:", e));
+    });
+
+    const story = {
+      1: {
+        text: "Ты осторожно заходишь в коммуналку. Внутри темно и пахнет плесенью. На старом телевизоре бормочет новостная лента, а в углу кто-то курит.",
+        choices: [
+          { id: 'back', text: "Вернуться в коридор" }
+        ]
+      },
+      2: {
+        text: "Ты спускаешься во двор. Гаражи покрыты ржавчиной и граффити, где-то мерцает тусклый свет. Тишина давит на уши.",
+        choices: [
+          { id: 'back', text: "Подняться обратно на этаж" }
+        ]
+      },
+      3: {
+        text: "В лестничной клетке слышны скрипы и едва уловимые шёпоты. Воздух густой и холодный, а тени пляшут на стенах.",
+        choices: [
+          { id: 'back', text: "Отступить в коридор" }
+        ]
+      },
+      4: {
+        text: "Медвежонок грязный, с одним глазом. Пустые бутылки вокруг пахнут дешевым пивом и заброшенностью.",
+        choices: [
+          { id: 'back', text: "Вернуться в коридор" }
+        ]
+      },
+      back: {
+        text: "Ты снова стоишь в коридоре. Пыль и полумрак окутывают всё вокруг.",
+        choices: [
+          { id: 1, text: "Пойти в коммуналку послушать телевизор поближе" },
+          { id: 2, text: "Спуститься обратно во двор и посмотреть на гаражи" },
+          { id: 3, text: "Заглянуть в лестничную клетку" },
+          { id: 4, text: "Осмотреть медвежонка и бутылку тщательнее" }
+        ]
+      }
+    };
+
+    choices.addEventListener('click', e => {
+      if (e.target.tagName !== 'BUTTON') return;
+      const choiceId = e.target.getAttribute('data-choice');
+      if (!story[choiceId]) return;
+      storyText.textContent = story[choiceId].text;
+      const newChoices = story[choiceId].choices;
+      choices.innerHTML = '';
+      newChoices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-button';
+        btn.textContent = choice.text;
+        btn.setAttribute('data-choice', choice.id);
+        choices.appendChild(btn);
+      });
     });
   </script>
 </body>
